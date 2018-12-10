@@ -25,5 +25,6 @@ uint8_t readChunk(Chunk* chunk, int index);
 void freeChunk(Chunk* chunk);
 int addConstant(Chunk* chunk, Value value);
 int getLine(Chunk* chunk, int index);
+void writeConstant(Chunk* chunk, Value value, int line);
 
 #endif
