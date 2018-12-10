@@ -67,10 +67,27 @@ void testGetTwoCommandsOneLine(CuTest *tc) {
   freeChunk(&chunk);
 }
 
+void testReadChunk(CuTest *tc) {
+  Chunk chunk;
+  initChunk(&chunk);
+
+  int constant = addConstant(&chunk, 1.2);
+  writeChunk(&chunk, OP_CONSTANT, 123);
+  writeChunk(&chunk, constant, 123);
+  writeChunk(&chunk, OP_RETURN, 456);
+
+  CuAssertIntEquals(tc, OP_CONSTANT, readChunk(&chunk, 0));
+  CuAssertIntEquals(tc, constant, readChunk(&chunk, 1));
+  CuAssertIntEquals(tc, OP_RETURN, readChunk(&chunk, 2));
+
+  freeChunk(&chunk);
+}
+
 CuSuite* ChunkGetSuite() {
   CuSuite* suite = CuSuiteNew();
   SUITE_ADD_TEST(suite, testGetLine);
   SUITE_ADD_TEST(suite, testGetTwoCommands);
   SUITE_ADD_TEST(suite, testGetTwoCommandsOneLine);
+  SUITE_ADD_TEST(suite, testReadChunk);
   return suite;
 }

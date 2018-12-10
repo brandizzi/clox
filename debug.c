@@ -20,7 +20,7 @@ static int simpleInstruction(const char* name, int offset) {
 
 static int constantInstruction(const char* name, Chunk* chunk,
                                int offset) {
-  uint8_t constant = chunk->code[offset + 1];
+  uint8_t constant = readChunk(chunk, offset + 1);
   printf("%-16s %4d '", name, constant);
   printValue(chunk->constants.values[constant]);
   printf("'\n");
@@ -36,7 +36,7 @@ int disassembleInstruction(Chunk* chunk, int offset) {
     printf("%4d ", getLine(chunk, offset));
   }
 
-  uint8_t instruction = chunk->code[offset];
+  uint8_t instruction = readChunk(chunk, offset);
   switch (instruction) {
     case OP_CONSTANT:
       return constantInstruction("OP_CONSTANT", chunk, offset);

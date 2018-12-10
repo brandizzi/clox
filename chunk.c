@@ -42,6 +42,10 @@ void writeChunk(Chunk* chunk, uint8_t byte, int line) {
   }
 }
 
+uint8_t readChunk(Chunk* chunk, int index) {
+  return chunk->code[index];
+}
+
 void freeChunk(Chunk* chunk) {
   FREE_ARRAY(uint8_t, chunk->code, chunk->capacity);
   FREE_ARRAY(int, chunk->lines, chunk->capacity);
