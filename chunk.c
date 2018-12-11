@@ -68,8 +68,16 @@ int getLine(Chunk* chunk, int offset) {
 }
 
 void writeConstant(Chunk* chunk, Value value, int line) {
-  writeChunk(chunk, OP_CONSTANT, line);
-  int constant = addConstant(chunk, value);
-  writeChunk(chunk, constant, line);
+  if (chunk->constants.count <= UINT8_MAX) {
+    writeChunk(chunk, OP_CONSTANT, line);
+    int constant = addConstant(chunk, value);
+    writeChunk(chunk, constant, line);
+  } else {
+    writeChunk(chunk, OP_CONSTANT_LONG, line);
+    int constant = addConstant(chunk, value);
+    writeChunk(chunk, (constant >> 16) & 0xFF, line);
+    writeChunk(chunk, (constant >> 8) & 0xFF, line);
+    writeChunk(chunk, (constant) & 0xFF, line);
+  }
 }
 

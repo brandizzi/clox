@@ -100,6 +100,31 @@ void testWriteConstant(CuTest *tc) {
   freeChunk(&chunk);
 }
 
+void testWriteConstantLong(CuTest *tc) {
+  Chunk chunk;
+  initChunk(&chunk);
+
+  for (int i = 0; i < 257; i++) {
+    writeConstant(&chunk, 1.2, 123);
+  }
+
+  writeConstant(&chunk, 2.3, 123);
+
+  CuAssertIntEquals(tc, OP_CONSTANT_LONG, readChunk(&chunk, 256*2));
+  CuAssertIntEquals(tc, 0, readChunk(&chunk, 256*2+1));
+  CuAssertIntEquals(tc, 1, readChunk(&chunk, 256*2+2));
+  CuAssertIntEquals(tc, 0, readChunk(&chunk, 256*2+3));
+
+  writeConstant(&chunk, 3.4, 123);
+
+  CuAssertIntEquals(tc, OP_CONSTANT_LONG, readChunk(&chunk, 256*2+4));
+  CuAssertIntEquals(tc, 0, readChunk(&chunk, 256*2+5));
+  CuAssertIntEquals(tc, 1, readChunk(&chunk, 256*2+6));
+  CuAssertIntEquals(tc, 1, readChunk(&chunk, 256*2+7));
+
+  freeChunk(&chunk);
+}
+
 CuSuite* ChunkGetSuite() {
   CuSuite* suite = CuSuiteNew();
   SUITE_ADD_TEST(suite, testGetLine);
@@ -107,5 +132,6 @@ CuSuite* ChunkGetSuite() {
   SUITE_ADD_TEST(suite, testGetTwoCommandsOneLine);
   SUITE_ADD_TEST(suite, testReadChunk);
   SUITE_ADD_TEST(suite, testWriteConstant);
+  SUITE_ADD_TEST(suite, testWriteConstantLong);
   return suite;
 }
